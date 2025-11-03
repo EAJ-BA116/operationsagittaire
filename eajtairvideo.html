@@ -25,6 +25,22 @@
             transform: translateY(-3px); /* Léger effet de soulèvement */
         }
 
+        .video-frame {
+  position: relative;
+  max-width: 960px;
+  margin: 20px auto;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.video-frame iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+}
+
+
        
 
     </style>
@@ -33,12 +49,17 @@
      <h1>Opération Sagittaire</h1>
      <h2>EAJ t'AIR : Le reportage Vidéo</h2>
      
-   <main><div class="video-frame">
-  <video controls preload="metadata" poster="/images/Operationsagitaire.jpg">
-    <source src="/video/operationsagittaire.mp4" type="video/mp4">
-    Votre navigateur ne supporte pas la lecture vidéo.
-  </video>
+   <main>
+    <div class="video-frame">
+  <iframe 
+    src="https://drive.google.com/file/d/1Cl4wTJdq62hUrV407t-9qyG9W4iYsTHL/preview" 
+    width="960" 
+    height="540" 
+    allow="autoplay"
+    allowfullscreen>
+  </iframe>
 </div>
+
 
     </div>
     </main>
