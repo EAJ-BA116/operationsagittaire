@@ -52,12 +52,13 @@ main {
             text-shadow: 0 0 10px #45a29e;
         }
 
-        video {
-            width: 90%;
-            max-width: 900px;
-            border-radius: 12px;
-            box-shadow: 0 0 25px rgba(102, 252, 241, 0.4);
-            margin: 20px 0;
+       
+        h2 {
+            margin-top: 20px;
+            font-size: 1.5em;
+            letter-spacing: 2px;
+            text-align: center;
+          
         }
 footer {
     position: fixed;
@@ -216,7 +217,9 @@ footer strong {
 
             .logos img {
                 height: 40px;
+                
             }
+              .video-frame { width: 96vw; border-radius: 16px; }
         }
 .accueilfooter{
   position: fixed;
@@ -224,3 +227,79 @@ width: 100%;
 bottom: 0px;
 height: 75px;
 }
+ /* ——— Vidéo responsive ——— */
+.video-frame {
+  width: min(92vw, 1100px);      /* s’adapte à l’écran, borné à 1100px */
+  aspect-ratio: 16 / 9;          /* garde un ratio propre */
+  background: #000;              /* barres noires si besoin */
+  border-radius: clamp(12px, 2vw, 25px);
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(102, 252, 241, 0.4);
+  margin: 20px auto;
+}
+
+.video-frame > video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;           /* évite la coupe ; utilise cover si tu veux recadrer */
+}
+
+/* Centre le contenu et évite que le footer fixe ne chevauche la vidéo */
+main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(12px, 2.5vw, 32px);
+  padding-bottom: 110px;         /* >= hauteur du footer (75px) + marge */
+}
+
+/* Mobile : un peu plus large et bords plus doux */
+@media (max-width: 600px) {
+  .video-frame { width: 96vw; border-radius: 16px; }
+}
+.pdf-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 1.2rem;
+    background-color: rgba(68, 84, 99, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background-color 0.3s ease;
+}
+
+.pdf-close:hover {
+    background-color: rgba(68, 84, 99, 1);
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    text-decoration: none;
+    border-radius: 25px;
+    background-color: rgba(61, 73, 86, 0.85);
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    max-width: 90vw;
+    margin: 1rem auto;
+}
+
+.btn:hover {
+    background-color: rgba(30, 39, 48, 0.9);
+    transform: translateY(-3px); /* Léger effet de soulèvement */
+}
+

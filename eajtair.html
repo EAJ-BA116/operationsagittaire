@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compagnons de la libération</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1>Opération Sagittaire</h1>
+</p>
+
+ <main>
+ <h2>EAJ t'AIR</h2>
+<!-- Bouton principal -->
+<a href="eajtairpdf.html" class="btn">Le Journal de l'opération Sagittaire</a>
+<h1><br></h1>
+
+
+      <Footer>
+      <a href="index.html" class="footer-btn">Retour à l'accueil</a>
+          <img src="images/ba116.png" alt="Décor gauche" class="img-gauche">
+          <p><br></p>
+        <p style="color: #030f19;position: relative;bottom: 120%;font-size: 0.7rem;"> <strong>EAJ BA 116</strong> - 2025</p>
+        
+        <img src="images/eaj.png" alt="Décor droite" class="img-droite">
+      </footer>
+    </main>
+</body>
+<script>
+  function openLightbox(src) {
+      const lightbox = document.getElementById('lightbox');
+      const img = document.getElementById('lightbox-img');
+      img.src = src;
+      lightbox.style.display = 'flex';
+    }
+
+    // Animation fade-in
+    window.addEventListener("DOMContentLoaded", () => {
+      document.body.classList.add("fade-in");
+    });
+       // Ajouter effet fade-out sur les liens internes
+    const links = document.querySelectorAll("a[href]");
+    links.forEach(link => {
+        link.addEventListener("click", function (e) {
+            const href = this.getAttribute("href");
+
+            // Ignore les liens externes ou ancrages
+            if (!href.startsWith("http") && !href.startsWith("#")) {
+                e.preventDefault();
+                document.body.classList.remove("fade-in");
+                document.body.classList.add("fade-out");
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 400); // délai identique à la durée de l'animation CSS
+            }
+        });
+    });
+  
+    function ouvrirPDF() {
+  const lightbox = document.getElementById("pdf-lightbox");
+  lightbox.classList.remove("fade-out");
+  lightbox.style.display = "flex";
+  document.body.style.overflow = "hidden"; // Empêche scroll fond
+}
+
+function fermerPDF(event) {
+  const lightbox = document.getElementById("pdf-lightbox");
+  lightbox.classList.add("fade-out");
+  setTimeout(() => {
+    lightbox.style.display = "none";
+    lightbox.classList.remove("fade-out");
+    document.body.style.overflow = ""; // Réactive scroll
+  }, 400);
+  event.stopPropagation();
+}
+</script>
+
+</html>

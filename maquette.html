@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Construction de la maquette</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    /* --- Bloc "Voir le scan" --- */
+    .scan-container {
+      position: relative;
+      max-width: 360px;
+      margin: 40px auto;
+      cursor: pointer;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .scan-container img {
+      width: 100%;
+      display: block;
+      border-radius: 12px;
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+
+    .scan-container:hover img {
+      transform: scale(1.05);
+      filter: brightness(0.8);
+    }
+
+    .scan-button {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-shadow: 0 0 10px rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.35);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .scan-container:hover .scan-button {
+      opacity: 1;
+    }
+
+    /* Animation fade-in/out globale */
+    body { opacity: 0; transition: opacity .4s ease; }
+    body.fade-in { opacity: 1; }
+    body.fade-out { opacity: 0; }
+  </style>
+</head>
+<body>
+    <h1>Opération Sagittaire</h1>
+  <main>
+    <h2>Construction de la maquette</h2>
+
+    <!-- Image avec bouton "Voir le scan" -->
+    <figure id="openScan" class="scan-container">
+      <img src="images/maquette.jpg" alt="Voir le scan 3D">
+      <div class="scan-button">▶ Voir le scan</div>
+    </figure>
+  </main>
+
+<Footer>
+      <a href="index.html" class="footer-btn">Retour à l'accueil</a>
+          <img src="images/ba116.png" alt="Décor gauche" class="img-gauche">
+          <p><br></p>
+        <p style="color: #030f19;position: relative;bottom: 120%;font-size: 0.7rem;"> <strong>EAJ BA 116</strong> - 2025</p>
+        
+        <img src="images/eaj.png" alt="Décor droite" class="img-droite">
+      </footer> 
+
+  <script>
+    // Animation fade-in au chargement
+    window.addEventListener("DOMContentLoaded", () => {
+      document.body.classList.add("fade-in");
+
+      // Clic sur l'image => ouvre le scan dans la même page
+      const scanUrl = "https://scaniverse.com/scan/whqyki3n5yhp6dn5";
+      const image = document.getElementById("openScan");
+      image.addEventListener("click", () => {
+        document.body.classList.remove("fade-in");
+        document.body.classList.add("fade-out");
+        setTimeout(() => {
+          window.location.href = scanUrl;
+        }, 400); // même durée que l'animation CSS
+      });
+    });
+
+    // Animation fade-out sur liens internes
+    (function () {
+      const links = document.querySelectorAll("a[href]");
+      links.forEach(link => {
+        link.addEventListener("click", function (e) {
+          const href = this.getAttribute("href");
+          if (!href || href.startsWith("http") || href.startsWith("#")) return;
+          e.preventDefault();
+          document.body.classList.remove("fade-in");
+          document.body.classList.add("fade-out");
+          setTimeout(() => { window.location.href = href; }, 400);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
