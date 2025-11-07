@@ -3,24 +3,91 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Opération Sagittaire</title>
+  <title>EAJ t'AIR : Le Magazine</title>
   <link rel="stylesheet" href="styles.css"/>
- 
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+     
+    }
+
+    #pdf-container {
+      width: 100vw;
+      height: 100vh;
+      overflow-y: auto;
+      background-color: #f2f2f2;
+      bottom: 100px;
+    }
+
+    canvas {
+      display: block;
+      margin: 0 auto;
+      max-width: 100vw;
+      height: auto;
+    }
+
+    
+  </style>
 </head>
 <body>
-    <h1>Opération Sagittaire</h1>
-  <main>
-    
-
-   <p>en construction</p>
-   </main> 
-   <Footer>
-      <a href="index.html" class="footer-btn">Retour à l'accueil</a>
+     <h1>Opération Sagittaire</h1>
+  <div id="pdf-container"></div>
+  
+        <Footer style="background-color: #606372;">
+     <a href="index.html" class="footer-btn">Retour à l'accueil</a>
           <img src="images/ba116.png" alt="Décor gauche" class="img-gauche">
           <p><br></p>
         <p style="color: #030f19;position: relative;bottom: 120%;font-size: 0.7rem;"> <strong>EAJ BA 116</strong> - 2025</p>
         
         <img src="images/eaj.png" alt="Décor droite" class="img-droite">
-      </footer> 
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      document.body.classList.add("fade-in");
+    });
+
+    const url = 'pdf/synthese.pdf';
+    const container = document.getElementById('pdf-container');
+    const loadingTask = pdfjsLib.getDocument(url);
+
+    loadingTask.promise.then(function (pdf) {
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        pdf.getPage(pageNum).then(function (page) {
+          const viewport = page.getViewport({ scale: 1.4 });
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+
+          const renderContext = {
+            canvasContext: context,
+            viewport: viewport
+          };
+
+          page.render(renderContext);
+          container.appendChild(canvas);
+        });
+      }
+    });
+
+    // Fade transition links (if you add any later)
+    const links = document.querySelectorAll("a[href]");
+    links.forEach(link => {
+      link.addEventListener("click", function (e) {
+        const href = this.getAttribute("href");
+        if (!href.startsWith("http") && !href.startsWith("#")) {
+          e.preventDefault();
+          document.body.classList.remove("fade-in");
+          document.body.classList.add("fade-out");
+          setTimeout(() => {
+            window.location.href = href;
+          }, 400);
+        }
+      });
+    });
+  </script>
 </body>
 </html>
