@@ -6,10 +6,19 @@
   <title>Construction de la maquette</title>
   <link rel="stylesheet" href="styles.css"/>
   <style>
-        body {
+    body {
       margin: 0;
       padding: 0;
-     
+      opacity: 0;
+      transition: opacity .4s ease;
+    }
+
+    body.fade-in {
+      opacity: 1;
+    }
+
+    body.fade-out {
+      opacity: 0;
     }
 
     #pdf-container {
@@ -67,17 +76,13 @@
     .scan-container:hover .scan-button {
       opacity: 1;
     }
-
-    /* Animation fade-in/out globale */
-    body { opacity: 0; transition: opacity .4s ease; }
-    body.fade-in { opacity: 1; }
-    body.fade-out { opacity: 0; }
   </style>
 </head>
 <body>
-    <h1>Opération Sagittaire</h1>
+  <h1>Opération Sagittaire</h1>
+
   <main>
-     <div id="pdf-container"></div>
+    <div id="pdf-container"></div>
 
     <!-- Image avec bouton "Voir le scan" -->
     <figure id="openScan" class="scan-container">
@@ -86,91 +91,106 @@
     </figure>
   </main>
 
-<Footer>
-      <a href="index.html" class="footer-btn">Retour à l'accueil</a>
-          <img src="images/ba116.png" alt="Décor gauche" class="img-gauche">
-          <p><br></p>
-        <p style="color: #030f19;position: relative;bottom: 120%;font-size: 0.7rem;"> <strong>EAJ BA 116</strong> - 2025</p>
-        
-        <img src="images/eaj.png" alt="Décor droite" class="img-droite">
-      </footer> 
- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <footer>
+    <a href="index.html" class="footer-btn">Retour à l'accueil</a>
+    <img src="images/ba116.png" alt="Décor gauche" class="img-gauche">
+    <p><br></p>
+    <p style="color: #030f19;position: relative;bottom: 120%;font-size: 0.7rem;">
+      <strong>EAJ BA 116</strong> - 2025
+    </p>
+    <img src="images/eaj.png" alt="Décor droite" class="img-droite">
+  </footer>
+
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
-     window.addEventListener("DOMContentLoaded", () => {
+    // Config worker PDF.js (recommandé)
+    if (window['pdfjsLib']) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+
+    const scanUrl = "https://scaniverse.com/scan/whqyki3n5yhp6dn5";
+
+    function applyFadeIn() {
+      document.body.classList.remove("fade-out");
       document.body.classList.add("fade-in");
-    });
+    }
 
-    const url = 'pdf/maquette.pdf';
-    const container = document.getElementById('pdf-container');
-    const loadingTask = pdfjsLib.getDocument(url);
+    function initPdf() {
+      const url = 'pdf/maquette.pdf';
+      const container = document.getElementById('pdf-container');
+      if (!container || !window['pdfjsLib']) return;
 
-    loadingTask.promise.then(function (pdf) {
-      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-        pdf.getPage(pageNum).then(function (page) {
-          const viewport = page.getViewport({ scale: 1.4 });
-          const canvas = document.createElement("canvas");
-          const context = canvas.getContext("2d");
+      const loadingTask = pdfjsLib.getDocument(url);
+      loadingTask.promise.then(function (pdf) {
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+          pdf.getPage(pageNum).then(function (page) {
+            const viewport = page.getViewport({ scale: 1.4 });
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
 
-          canvas.width = viewport.width;
-          canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
 
-          const renderContext = {
-            canvasContext: context,
-            viewport: viewport
-          };
+            const renderContext = {
+              canvasContext: context,
+              viewport: viewport
+            };
 
-          page.render(renderContext);
-          container.appendChild(canvas);
-        });
-      }
-    });
+            page.render(renderContext);
+            container.appendChild(canvas);
+          });
+        }
+      }).catch(err => {
+        console.error("Erreur chargement PDF :", err);
+      });
+    }
 
-    // Fade transition links (if you add any later)
-    const links = document.querySelectorAll("a[href]");
-    links.forEach(link => {
-      link.addEventListener("click", function (e) {
-        const href = this.getAttribute("href");
-        if (!href.startsWith("http") && !href.startsWith("#")) {
+    function initInternalLinks() {
+      const links = document.querySelectorAll("a[href]");
+      links.forEach(link => {
+        link.addEventListener("click", function (e) {
+          const href = this.getAttribute("href");
+          // On laisse passer les liens externes & ancres
+          if (!href || href.startsWith("http") || href.startsWith("#")) return;
+
           e.preventDefault();
           document.body.classList.remove("fade-in");
           document.body.classList.add("fade-out");
           setTimeout(() => {
             window.location.href = href;
           }, 400);
-        }
+        });
       });
-    });
-    // Animation fade-in au chargement
-    window.addEventListener("DOMContentLoaded", () => {
-      document.body.classList.add("fade-in");
+    }
 
-      // Clic sur l'image => ouvre le scan dans la même page
-      const scanUrl = "https://scaniverse.com/scan/whqyki3n5yhp6dn5";
+    function initScan() {
       const image = document.getElementById("openScan");
+      if (!image) return;
+
       image.addEventListener("click", () => {
+        // Transition vers le lien externe
         document.body.classList.remove("fade-in");
         document.body.classList.add("fade-out");
         setTimeout(() => {
           window.location.href = scanUrl;
-        }, 400); // même durée que l'animation CSS
+        }, 400);
       });
+    }
+
+    // Chargement initial
+    window.addEventListener("DOMContentLoaded", () => {
+      applyFadeIn();
+      initPdf();
+      initInternalLinks();
+      initScan();
     });
 
-    // Animation fade-out sur liens internes
-    (function () {
-      const links = document.querySelectorAll("a[href]");
-      links.forEach(link => {
-        link.addEventListener("click", function (e) {
-          const href = this.getAttribute("href");
-          if (!href || href.startsWith("http") || href.startsWith("#")) return;
-          e.preventDefault();
-          document.body.classList.remove("fade-in");
-          document.body.classList.add("fade-out");
-          setTimeout(() => { window.location.href = href; }, 400);
-        });
-      });
-    })();
-   
+    // Quand on revient avec "Précédent" (bfcache)
+    window.addEventListener("pageshow", (event) => {
+      applyFadeIn();
+    });
   </script>
 </body>
 </html>
